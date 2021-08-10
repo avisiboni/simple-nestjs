@@ -1,5 +1,4 @@
 import { Controller, Get, Res } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { AppService } from './app.service';
 import { AppLogger } from './logger/app-logger';
 
@@ -8,14 +7,12 @@ export class AppController {
   constructor(
     private readonly appService: AppService,
     private readonly logger: AppLogger,
-    private configService: ConfigService<EnvironmentVariables>
   ) { }
 
   @Get()
   getHello(): string {
     this.logger.log('Hello');
-    const env = this.configService.get('ENVIRONMENT');
-    return this.appService.getHello() + " CURRENT ENV IS = " + env;
+    return this.appService.getHello();
   }
 
   @Get('login')
@@ -38,8 +35,4 @@ export class AppController {
       lastName: 'Lan'
     }]
   }
-}
-
-interface EnvironmentVariables {
-  ENVIRONMENT: string;
 }

@@ -1,7 +1,6 @@
 import { NestFactory } from "@nestjs/core";
 import {
   WinstonModule,
-  WINSTON_MODULE_NEST_PROVIDER,
   utilities as nestWinstonModuleUtilities
 } from "nest-winston";
 import {
@@ -9,19 +8,17 @@ import {
   NestFastifyApplication
 } from "@nestjs/platform-fastify";
 import { AppModule } from "./app.module";
-import { AppLogger } from "./logger/app-logger";
 import * as winston from "winston";
 import { ElasticsearchTransport, ElasticsearchTransportOptions } from "winston-elasticsearch";
-import { LogstashTransport } from "winston-logstash-transport";
 
 async function bootstrap() {
   const esTransportOpts: ElasticsearchTransportOptions = {
     level: 'info',
     clientOpts: {
       node: 'http://localhost:9200',
-      auth:{
-        username:'elastic',
-        password:'changeme'
+      auth: {
+        username: 'elastic',
+        password: 'changeme'
       }
     }
   };
@@ -36,18 +33,18 @@ async function bootstrap() {
         )
       }),
       // new LogstashTransport({ host: "localhost", port: 5044 })
-      new ElasticsearchTransport(esTransportOpts)
+      // new ElasticsearchTransport(esTransportOpts)
     ]
   });
 
-  
+
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(),
     { logger }
   );
   // app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
-  await app.listen(process.env.PORT || 65533);
+  await app.listen(process.env.PORT || 3000,'0.0.0.0');
 }
 
 bootstrap();
